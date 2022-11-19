@@ -66,6 +66,16 @@ server.route({
   }
 })
 
+server.route({
+  method: 'POST',
+  path: '/jaas/webhooks',
+  handler: handlers.Webhooks.create,
+  options: {
+    description: 'Receive Webhook About Jitsi Meet Events',
+    tags: ['api', 'webhooks'],
+  }
+})
+
 var started = false
 
 export async function start() {

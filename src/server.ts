@@ -51,7 +51,8 @@ if (config.get('prometheus_enabled')) {
 }
 
 server.route({
-  method: 'GET', path: '/api/v0/status',
+  method: 'GET',
+  path: '/api/v0/status',
   handler: handlers.Status.index,
   options: {
     description: 'Simply check to see that the server is online and responding',
@@ -62,6 +63,24 @@ server.route({
         status: Joi.string().valid('OK', 'ERROR').required(),
         error: Joi.string().optional()
       }).label('ServerStatus')
+    }
+  }
+})
+
+
+server.route({
+  method: 'POST',
+  path: '/api/v1/jaas/auth',
+  handler: handlers.AuthTokens.create,
+  options: {
+    description: 'Trade Relay Token for Jitsi JWT',
+    tags: ['api', 'auth', 'tokens'],
+    validate: {
+      payload: Joi.object({
+        paymail: Joi.string().required(),
+        token: Joi.string().required(),
+        wallet: Joi.string().required()
+      }).label('AuthTokensCreatePayload')
     }
   }
 })

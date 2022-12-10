@@ -87,7 +87,7 @@ server.route({
 
 server.route({
   method: 'POST',
-  path: '/jaas/webhooks',
+  path: '/api/v1/jaas/webhooks',
   handler: handlers.Webhooks.create,
   options: {
     description: 'Receive Webhook About Jitsi Meet Events',

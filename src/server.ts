@@ -15,6 +15,8 @@ const Pack = require('../package');
 
 import { load } from './server/handlers'
 
+import { plugin as socketio } from './socket.io/plugin'
+
 const handlers = load(join(__dirname, './server/handlers'))
 
 export const server = new Server({
@@ -63,6 +65,22 @@ server.route({
         status: Joi.string().valid('OK', 'ERROR').required(),
         error: Joi.string().optional()
       }).label('ServerStatus')
+    }
+  }
+})
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/jaas/events',
+  handler: handlers.Events.index,
+  options: {
+    description: 'List events optionally filtered by json eventType',
+    tags: ['api', 'events'],
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        events: Joi.array().required()
+      }).label('Events')
     }
   }
 })
@@ -131,6 +149,8 @@ export async function start() {
           options: swaggerOptions
         }
     ]);
+
+    await server.register(socketio);
 
     log.info('server.api.documentation.swagger', swaggerOptions)
   }

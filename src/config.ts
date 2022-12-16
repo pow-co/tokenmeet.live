@@ -50,9 +50,9 @@ nconf.defaults({
   prometheus_enabled: true,
   http_api_enabled: true,
   swagger_enabled: true,
-  postgres_enabled: false,
-  amqp_enabled: false,
-  loki_enabled: false
+  postgres_enabled: true,
+  amqp_enabled: true,
+  loki_enabled: true
 })
 
 export default nconf

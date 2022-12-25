@@ -1,5 +1,5 @@
 
-import { log } from 'rabbi'
+import { log, publish } from 'rabbi'
 
 export const exchange = 'tokenmeet.live'
 
@@ -23,9 +23,8 @@ export default async function start(channel, msg, json) {
     payload: json
   })
 
-  log.debug('jitsi-event.recorded', record.toJSON())
+  publish(exchange, 'jitsi-event.recorded', record.toJSON())
     
   channel.ack(msg)
 
 }
-

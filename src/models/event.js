@@ -22,6 +22,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    txid: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     payload: {
       type: DataTypes.JSON,
       allowNull: true,

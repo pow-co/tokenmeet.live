@@ -22,7 +22,7 @@ export const generate = (privateKey, { id, name, email, avatar, appId, kid, bala
         moderator
       },
       features: {
-        livestreaming: 'false',
+        livestreaming: moderator ? 'true' : 'false',
         recording: 'true',
         transcription: 'false',
         "outbound-call": 'false'

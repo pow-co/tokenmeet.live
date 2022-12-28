@@ -60,6 +60,25 @@ async function authWallet({ paymail, token, wallet }: {paymail: string, token: s
 
 export async function create(req, h) {
 
+  /*
+
+    This is the handler for the /auth_tokens endpoint.
+
+    It receives a POST request with a paymail and a token, and a room name and returns a JWT.
+    
+    Room names follow a number of patterns including token and paymail based rooms:
+
+    - token-based: /meet/{origin}/{minimumAmount}
+    - paymail-based: /meet/{paymail}
+    - 1name-based: /meet/1{name}
+
+    For paymail-based or 1name-based rooms the room will require the owner of the room to be present in the room.
+    Before that moment the participants will be in a waiting room until the owner joins, at which point the recording
+    will begin.
+  */
+
+  const { token, paymail, room1name, roomPaymail, roomMinimumAmount, tokenOrigin } = req.payload
+
   if (!req.payload.wallet) {
 
     return { error: "wallet parameter must be provided" }

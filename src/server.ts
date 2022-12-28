@@ -97,7 +97,11 @@ server.route({
       payload: Joi.object({
         paymail: Joi.string().required(),
         token: Joi.string().required(),
-        wallet: Joi.string().required()
+        wallet: Joi.string().required(),
+        roomPaymail: Joi.string().optional(),
+        tokenOrigin : Joi.string().optional(),
+        room1Name: Joi.string().optional(),
+        roomMinimumAmount: Joi.number().required()
       }).label('AuthTokensCreatePayload')
     }
   }

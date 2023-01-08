@@ -1,11 +1,8 @@
 
-import * as auth from '../../auth'
-
-import * as relay from '../../relay'
 
 import { readFileSync } from 'fs';
+
 import { generate } from '../../jwt';
-import axios from 'axios';
 
 import * as http from 'superagent'
 
@@ -15,30 +12,32 @@ const privateKey = readFileSync(process.env.jaas_8x8_private_key_path || './priv
 
 async function getPowcoBalance(paymail) {
 
-    const { body: data } = await http.get('https://staging-backend.relayx.com/api/token/93f9f188f93f446f6b2d93b0ff7203f96473e39ad0f58eb02663896b53c4f020_o2/owners')
+  return getTokenBalance({origin: '93f9f188f93f446f6b2d93b0ff7203f96473e39ad0f58eb02663896b53c4f020_o2', paymail})
 
-    console.log('OWNERS', data.data.owners)
+}
+
+async function getTokenBalance({origin, paymail}) {
+
+    const { body: data } = await http.get(`https://staging-backend.relayx.com/api/token/${origin}/owners`)
 
     const [owner] = data.data.owners.filter((owner: any) => {
     
         return owner.paymail === paymail
     })
 
-    console.log('OWNER', owner)
-
-    console.log('paymail', paymail)
-
     return owner
 }
 
-async function authWallet({ paymail, token, wallet }: {paymail: string, token: string, wallet: string}): Promise<string> {
+async function authWallet({ paymail, token, wallet, tokenOrigin }: {paymail: string, token: string, wallet: string, tokenOrigin: string}): Promise<string> {
 
   /*var authorized = await relay.authenticate({
     paymail,
     token
   })*/
 
-  const {amount} = await getPowcoBalance(paymail)
+  const {amount} = await getTokenBalance({paymail, origin: tokenOrigin})
+
+  if (amount< 1) throw new Error('Not enough funds')
 
   const name = `${paymail} - ${amount} pow.co`
 
@@ -49,6 +48,7 @@ async function authWallet({ paymail, token, wallet }: {paymail: string, token: s
         id: uuid(),
         name,
         email: paymail,
+        room: tokenOrigin,
         avatar: "https://relayx.io/images/relayx-logo.png",
         appId: process.env.jaas_8x8_app_id, // Your AppID ( previously tenant )
         kid: process.env.jaas_8x8_api_key_id // Your API Key ID

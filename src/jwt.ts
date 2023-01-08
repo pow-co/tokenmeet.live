@@ -1,11 +1,15 @@
 
 var jsonwebtoken = require('jsonwebtoken');
-var uuid = require('uuid-random');
+require('dotenv').config()
 
 /**
  * Function generates a JaaS JWT.
  */
-export const generate = (privateKey, { id, name, email, avatar, appId, kid, balance }) => {
+
+export interface GenerateJWTOptions {
+  id, name, email, avatar, appId, kid, balance, room
+}
+export const generate = (privateKey, { id, name, email, avatar, appId, kid, balance, room }: GenerateJWTOptions) => {
 
     const moderator = balance > 500
 
@@ -24,12 +28,12 @@ export const generate = (privateKey, { id, name, email, avatar, appId, kid, bala
       features: {
         livestreaming: moderator ? 'true' : 'false',
         recording: 'true',
-        transcription: 'false',
+        transcription: 'true',
         "outbound-call": 'false'
       }
     },
     iss: 'chat',
-    room: '*',
+    room: `${process.env.jaas_8x8_app_id}/${room}`,
     sub: appId,
     exp: Math.round(now.setHours(now.getHours() + 3) / 1000),
     nbf: (Math.round((new Date).getTime() / 1000) - 10)

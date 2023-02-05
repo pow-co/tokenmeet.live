@@ -8,7 +8,6 @@ import * as http from 'superagent'
 
 const uuid = require('uuid-random')
 
-const privateKey = readFileSync(process.env.jaas_8x8_private_key_path || './private.key', 'utf8')
 
 async function getPowcoBalance(paymail) {
 
@@ -21,7 +20,7 @@ async function getTokenBalance({origin, paymail}) {
     const { body: data } = await http.get(`https://staging-backend.relayx.com/api/token/${origin}/owners`)
 
     const [owner] = data.data.owners.filter((owner: any) => {
-    
+
         return owner.paymail === paymail
     })
 
@@ -42,7 +41,7 @@ async function authWallet({ paymail, token, wallet, tokenOrigin }: {paymail: str
   const name = `${paymail} - ${amount} pow.co`
 
   console.log({ name, amount })
-
+    const privateKey = readFileSync(process.env.jaas_8x8_private_key_path || './private.key', 'utf8')
     const jwt = generate(privateKey, {
         balance: amount,
         id: uuid(),
@@ -65,7 +64,7 @@ export async function create(req, h) {
     This is the handler for the /auth_tokens endpoint.
 
     It receives a POST request with a paymail and a token, and a room name and returns a JWT.
-    
+
     Room names follow a number of patterns including token and paymail based rooms:
 
     - token-based: /meet/{origin}/{minimumAmount}

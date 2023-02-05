@@ -85,6 +85,36 @@ server.route({
   }
 })
 
+server.route({
+  method: 'GET',
+  path: '/api/v1/playlists/{playlist_id}',
+  handler: handlers.Playlists.show,
+  options: {
+    description: 'Trade Relay Token for Jitsi JWT',
+    tags: ['api', 'auth', 'tokens'],
+    validate: {
+      headers: Joi.object({
+        'relayone-auth-token': Joi.string().required()
+      }),
+      params: Joi.object({
+        playlist_id: Joi.any()
+      })
+    },
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        playlist: Joi.object({
+          uid: Joi.string().required(),
+          videos: Joi.array().items(Joi.object({
+            url: Joi.string().required(),
+            txid: Joi.string().required()
+          }))
+        }).required()
+      }).label('Playlist')
+    }
+  }
+})
+
 
 server.route({
   method: 'POST',
@@ -133,9 +163,9 @@ export async function start() {
         version: Pack.version,
         description: 'Developer API Documentation \n\n *** DEVELOPERS *** \n\n Edit this file under `swaggerOptions` in `src/server.ts` to better describe your service.'
       },
-      schemes: ['https'],
-      host: 'http://localhost:8000',
-      documentationPath: '/',
+      schemes: ['https', 'http'],
+      host: process.env.NODE_ENV === 'production' ? 'tokenmeet.live' : 'localhost:5200',
+      documentationPath: '/api',
       grouping: 'tags'
     }
 

@@ -25,6 +25,4 @@ export default async function start(channel, msg, json) {
 
   publish(exchange, 'jitsi-event.recorded', record.toJSON())
     
-  channel.ack(msg)
-
 }

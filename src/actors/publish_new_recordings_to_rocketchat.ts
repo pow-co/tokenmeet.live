@@ -34,7 +34,5 @@ export default async function start(channel, msg, json) {
 
   }
 
-  channel.ack(msg)
-
 }
 

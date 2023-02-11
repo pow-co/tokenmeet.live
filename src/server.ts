@@ -94,15 +94,15 @@ server.route({
     description: 'Trade Relay Token for Jitsi JWT',
     tags: ['api', 'auth', 'tokens'],
     validate: {
-      payload: Joi.object({
+      /*payload: Joi.object({
         paymail: Joi.string().required(),
         token: Joi.string().required(),
         wallet: Joi.string().required(),
         roomPaymail: Joi.string().optional(),
         tokenOrigin : Joi.string().optional(),
         room1Name: Joi.string().optional(),
-        roomMinimumAmount: Joi.number().required()
-      }).label('AuthTokensCreatePayload')
+        roomMinimumAmount: Joi.number().optional()
+      }).label('AuthTokensCreatePayload')*/
     }
   }
 })
@@ -134,7 +134,7 @@ export async function start() {
         description: 'Developer API Documentation \n\n *** DEVELOPERS *** \n\n Edit this file under `swaggerOptions` in `src/server.ts` to better describe your service.'
       },
       schemes: ['https'],
-      host: 'http://localhost:8000',
+      host: 'tokenmeet.live',
       documentationPath: '/',
       grouping: 'tags'
     }

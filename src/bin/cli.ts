@@ -2,13 +2,17 @@
 
 const { version } = require('../../package')
 
-import { program } from 'commander'
+import { Command } from 'commander';
+
+const program = new Command();
 
 import { start as server } from '../server'
 
 import { start as actors } from '../rabbi/actors'
 
 import { start as main } from '../main'
+
+import { downloadVideo } from '../download'
 
 program
   .version(version)
@@ -34,6 +38,18 @@ program
     process.exit(0)
 
   })
+
+program
+  .command('download <url> <target_path>')
+  .action(async (url, filepath) => {
+
+    const result = await downloadVideo({ url, filepath })
+
+    console.log('download.video.result', result)
+
+  })
+
+
 
 program
   .command('start')

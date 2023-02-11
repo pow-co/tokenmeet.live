@@ -79,6 +79,8 @@ export async function create(req, h) {
 
   const { token, paymail, room1name, roomPaymail, roomMinimumAmount, tokenOrigin } = req.payload
 
+  console.log("server.handlers.auth_tokens.create", { payload: req.payload })
+
   if (!req.payload.wallet) {
 
     return { error: "wallet parameter must be provided" }
@@ -96,7 +98,7 @@ export async function create(req, h) {
 
   } catch(error) {
 
-    console.error(error.message)
+    console.error(error)
 
     return { error: error.message }
 

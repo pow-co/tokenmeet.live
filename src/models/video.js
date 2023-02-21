@@ -20,7 +20,13 @@ module.exports = (sequelize, DataTypes) => {
     txid: DataTypes.STRING,
     ipfs_hash: DataTypes.STRING,
     uid: DataTypes.STRING,
-    filepath: DataTypes.STRING
+    url: DataTypes.STRING,
+    youtube_url: DataTypes.STRING,
+    liveapi_url: DataTypes.STRING,
+    filepath: DataTypes.STRING,
+    title: DataTypes.STRING,
+    description: DataTypes.TEXT,
+    startedAt: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Video',

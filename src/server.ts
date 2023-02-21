@@ -135,7 +135,7 @@ export async function start() {
       },
       schemes: ['https'],
       host: 'tokenmeet.live',
-      documentationPath: '/',
+      documentationPath: '/api',
       grouping: 'tags'
     }
 

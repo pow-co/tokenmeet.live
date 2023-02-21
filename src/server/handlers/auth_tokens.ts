@@ -1,14 +1,10 @@
 
 
-import { readFileSync } from 'fs';
-
 import { generate } from '../../jwt';
 
 import * as http from 'superagent'
 
 const uuid = require('uuid-random')
-
-const privateKey = readFileSync(process.env.jaas_8x8_private_key_path || './private.key', 'utf8')
 
 async function getPowcoBalance(paymail) {
 
@@ -35,6 +31,8 @@ async function authWallet({ paymail, token, wallet, tokenOrigin }: {paymail: str
     token
   })*/
 
+  tokenOrigin  = tokenOrigin || '93f9f188f93f446f6b2d93b0ff7203f96473e39ad0f58eb02663896b53c4f020_o2'
+
   const {amount} = await getTokenBalance({paymail, origin: tokenOrigin})
 
   if (amount< 1) throw new Error('Not enough funds')
@@ -43,15 +41,11 @@ async function authWallet({ paymail, token, wallet, tokenOrigin }: {paymail: str
 
   console.log({ name, amount })
 
-    const jwt = generate(privateKey, {
-        balance: amount,
-        id: uuid(),
+    const jwt = generate({
         name,
-        email: paymail,
+        paymail,
         room: tokenOrigin,
         avatar: "https://relayx.io/images/relayx-logo.png",
-        appId: process.env.jaas_8x8_app_id, // Your AppID ( previously tenant )
-        kid: process.env.jaas_8x8_api_key_id // Your API Key ID
     });
 
     return jwt

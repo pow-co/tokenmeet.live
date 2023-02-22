@@ -23,6 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     url: DataTypes.STRING,
     youtube_url: DataTypes.STRING,
     liveapi_url: DataTypes.STRING,
+    liveapi_hls_url: DataTypes.STRING,
+    liveapi_embed_url: DataTypes.STRING,
     filepath: DataTypes.STRING,
     title: DataTypes.STRING,
     description: DataTypes.TEXT,

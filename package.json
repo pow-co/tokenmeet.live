@@ -42,7 +42,7 @@
       "prompt-async": "^0.9.9",
       "rabbi": "^1.21.4",
       "s3-streams": "^0.4.0",
-      "sequelize": "^6.25.7",
+      "sequelize": "^6.28.2",
       "socket.io": "^4.5.4",
       "socket.io-client": "^4.5.4",
       "stag-wallet": "^0.2.0",

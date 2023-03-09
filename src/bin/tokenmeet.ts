@@ -70,5 +70,133 @@ program
 
   })
 
+program
+  .command('liveapi-upload-video <filepath>')
+  .action(async (filepath) => {
+
+    try {
+
+      const result = await tokenmeet.liveapi.uploadLiveAPIVideo({
+        filepath,
+      })
+      
+      console.log({ result })
+
+
+    } catch(error) {
+
+      console.error(error)
+
+
+    }
+
+    process.exit(0)
+
+  })
+
+
+
+program
+  .command('liveapi-post-video <url>')
+  .action(async (input_url) => {
+
+    try {
+
+      const result = await tokenmeet.liveapi.createLiveapiVideoFromURL({
+        input_url,
+      })
+      
+      console.log({ result })
+
+
+    } catch(error) {
+
+
+    }
+
+    process.exit(0)
+
+  })
+
+program
+  .command('create-show <name> <stub>')
+  .action(async (name, stub) => {
+
+    try {
+
+      const [record, isNew] = await models.Show.findOrCreate({
+        where: { stub },
+        defaults: { name, stub }
+      })
+
+      console.log(record.toJSON(), {isNew})
+
+    } catch(error) {
+
+      console.error(error.message)
+
+    }
+
+    process.exit(0)
+
+  })
+
+program
+  .command('create-episode <show-stub> <title>')
+  .action(async (stub, title) => {
+
+    try {
+
+      const [show, isNew] = await models.Show.findOrCreate({
+        where: { stub },
+        defaults: { stub }
+      })
+
+      const episode = await models.ShowEpisode.create({
+        show_id: show.id,
+        title
+      })
+
+      console.log(episode.toJSON())
+
+    } catch(error) {
+
+      console.error(error.message)
+
+    }
+
+    process.exit(0)
+
+  })
+
+program
+  .command('set-episode-value <episode-id> <attribute> <value>')
+  .action(async (id, key, value) => {
+
+    try {
+
+      const episode = await models.ShowEpisode.findOne({
+        where: {
+          id
+        }
+      })
+
+      const update = {}
+      update[key] = value
+
+      await episode.updateAttributes(update)
+
+      console.log(episode.toJSON())
+
+    } catch(error) {
+
+      console.error(error.message)
+
+    }
+
+    process.exit(0)
+
+  })
+
 program.parse(process.argv)
 

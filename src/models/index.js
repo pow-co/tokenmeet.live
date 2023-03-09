@@ -31,6 +31,18 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+db.Show.hasMany(db.ShowEpisode, {
+  as: 'episodes',
+  foreignKey: 'show_id',
+  sourceKey: 'id'
+})
+
+db.ShowEpisode.belongsTo(db.Show, {
+  as: 'show',
+  foreignKey: 'id',
+  sourceKey: 'show_id'
+})
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

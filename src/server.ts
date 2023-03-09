@@ -71,6 +71,26 @@ server.route({
 
 server.route({
   method: 'GET',
+  path: '/api/v1/shows',
+  handler: handlers.Shows.index,
+  options: {
+    description: 'Returns List of Shows',
+    tags: ['api', 'shows']
+  }
+})
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/shows/{stub}',
+  handler: handlers.Shows.show,
+  options: {
+    description: 'Returns Show and its Episodes',
+    tags: ['api', 'shows']
+  }
+})
+
+server.route({
+  method: 'GET',
   path: '/api/v1/jaas/events',
   handler: handlers.Events.index,
   options: {

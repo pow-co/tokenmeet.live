@@ -1,9 +1,12 @@
+require('dotenv').config()
 
 const axios = require('axios')
 
 import { createReadStream } from "fs";
 
 const FormData = require('form-data')
+
+import * as models from './models'
 
 export async function createLiveapiVideoFromURL({ input_url }: { input_url: string }) {
 
@@ -64,6 +67,38 @@ export async function uploadLiveAPIVideo({ filepath }: { filepath: string }) {
   console.log('liveapi.video.create.response', { _id, url })
 
   return { _id, url }
+
+}
+
+export async function findOrCreateLivestream({channel}: { channel: string }) {
+
+  let record = await models.LiveStream.findOne({
+    where: {
+      channel
+    }
+  })
+
+  if (!record) {
+
+    const { data } = await axios.post(`https://api.liveapi.com/live_streams`, {}, {
+      auth: {
+        username: process.env.liveapi_access_token_id_production,
+        password: process.env.liveapi_secret_key_production
+      }
+    })
+
+    record = await models.LiveStream.create({
+      channel,
+      liveapi_data: data
+    })
+
+  }
+
+  if (record) {
+
+    return record.liveapi_data
+
+  }
 
 }
 

@@ -91,6 +91,16 @@ server.route({
 
 server.route({
   method: 'GET',
+  path: '/api/v1/livestreams/{channel}',
+  handler: handlers.LiveStreams.show,
+  options: {
+    description: 'Get LiveStream data for a given channel',
+    tags: ['api', 'livestreams']
+  }
+})
+
+server.route({
+  method: 'GET',
   path: '/api/v1/jaas/events',
   handler: handlers.Events.index,
   options: {

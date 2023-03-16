@@ -5,6 +5,10 @@ import { start as server } from './server'
 
 import { start as actors } from './rabbi/actors'
 
+import { schedule } from 'node-cron'
+
+import { syncVideos as syncLiveapiVideos } from './liveapi'
+
 export async function start() {
 
   if (config.get('http_api_enabled')) {
@@ -18,6 +22,8 @@ export async function start() {
     actors();
 
   }
+
+  schedule('* * * * *', syncLiveapiVideos) // every minute
 
 }
 

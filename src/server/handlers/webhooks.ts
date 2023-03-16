@@ -44,6 +44,41 @@ export async function create(req) {
 
 }
 
+export async function createLiveapi(req) {
+
+
+  log.info('liveapi.webhook', req.payload);
+
+  (async () => {
+
+    try {
+
+      await models.Event.create({
+
+        namespace: 'liveapi',
+
+        type: 'liveapi.webhook',
+
+        payload: req.payload
+
+      });
+
+      const channel = await getChannel()
+
+      channel.publish('powco', 'liveapi.webhook', Buffer.from(JSON.stringify(req.payload)))
+
+    } catch(error) {
+
+      log.error('notifyRocketchat.error', error)
+
+    }
+
+  })();
+
+  return { success: true }
+
+}
+
 function notifyRocketchat(webhook) {
 
   const url = 'https://chat.21e8.tech/hooks/KB7fZ75PECiApFeDA/hdpTQovnGzSJmJPDMNg4bCPGPzHBvemnnJR3D2wfcPW7tez5'

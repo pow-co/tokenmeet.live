@@ -79,6 +79,59 @@ server.route({
   }
 })
 
+const Video = Joi.object({
+  _id: Joi.string().required(),
+  playback: Joi.object({
+    embed_url: Joi.string(),
+    hls_url: Joi.string()
+  }),
+  download_url: Joi.string(),
+  user: Joi.string(),
+  environment: Joi.string(),
+  organization: Joi.string(),
+  media_info: Joi.object({
+    duration: Joi.number(),
+    track: Joi.array()
+  }),
+  creation_time: Joi.string(),
+  active: Joi.boolean(),
+  deleted: Joi.boolean(),
+  createdAt: Joi.date(),
+  updatedAt: Joi.date()
+})
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/videos',
+  handler: handlers.Videos.index,
+  options: {
+    description: 'Returns List of Videos',
+    tags: ['api', 'videos'],
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        videos: Joi.array().items(Video)
+      }).label('Videos')
+    }
+  }
+})
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/videos/{_id}',
+  handler: handlers.Videos.show,
+  options: {
+    description: 'Returns List of Videos',
+    tags: ['api', 'videos'],
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        video: Video
+      }).label('Videos')
+    }
+  }
+})
+
 server.route({
   method: 'GET',
   path: '/api/v1/shows/{stub}',
@@ -146,6 +199,18 @@ server.route({
     tags: ['api', 'webhooks'],
   }
 })
+
+server.route({
+  method: 'POST',
+  path: '/api/v1/liveapi/webhooks',
+  handler: handlers.Webhooks.createLiveapi,
+  options: {
+    description: 'Receive Webhook About Liveapi Meet Events',
+    tags: ['api', 'webhooks'],
+  }
+})
+
+
 
 var started = false
 

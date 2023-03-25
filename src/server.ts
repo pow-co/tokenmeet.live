@@ -69,6 +69,85 @@ server.route({
   }
 })
 
+const Liveread = Joi.object({
+  txid: Joi.string().required(),
+  txix: Joi.string().required(),
+  sponsor: Joi.string().required(),
+  host: Joi.string().required(),
+  commentary: Joi.string().required()
+})
+
+
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/livereads',
+  handler: handlers.Livereads.index,
+  options: {
+    description: 'Returns List of Livereads',
+    tags: ['api', 'livereads'],
+    validate: {
+      query: Joi.object({
+        host: Joi.string().optional(),
+        sponsor: Joi.string().optional(),
+        spent: Joi.boolean().optional(),
+        spent_method: Joi.string().optional(),
+        order: Joi.string().optional(),
+        limit: Joi.number().optional(),
+        offset: Joi.number().optional()
+      }).optional()
+    },
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        livereads: Joi.array().items(Liveread)
+      }).label('Liveread')
+    }
+
+  }
+})
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/livereads/{txid}',
+  handler: handlers.Livereads.show,
+  options: {
+    description: 'Returns Single of Liveread',
+    tags: ['api', 'livereads'],
+    validate: {
+      params: Joi.object({
+        txid: Joi.string().required()
+      })
+    },
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        liveread: Liveread
+      }).label('Livereads')
+    }
+  }
+})
+server.route({
+  method: 'POST',
+  path: '/api/v1/livereads',
+  handler: handlers.Livereads.createByTxhex,
+  options: {
+    description: 'Returns List of Livereads',
+    tags: ['api', 'livereads'],
+    validate: {
+      payload: Joi.object({
+        txhex: Joi.string().required()
+      })
+    },
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        livereads: Joi.array().items(Liveread)
+      }).label('Livereads')
+    }
+  }
+})
+
 server.route({
   method: 'GET',
   path: '/api/v1/shows',

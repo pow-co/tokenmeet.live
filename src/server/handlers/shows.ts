@@ -1,5 +1,5 @@
 
-import { notFound } from 'bsv'
+import { notFound } from 'boom'
 
 import * as models from '../../models'
 

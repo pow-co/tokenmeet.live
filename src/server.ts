@@ -127,6 +127,7 @@ server.route({
     }
   }
 })
+
 server.route({
   method: 'POST',
   path: '/api/v1/livereads',
@@ -147,6 +148,39 @@ server.route({
     }
   }
 })
+
+server.route({
+  method: 'POST',
+  path: '/api/v1/episodes',
+  handler: handlers.Episodes.create,
+  options: {
+    description: 'Create a new Episode for a Show',
+    tags: ['api', 'episodes'],
+    validate: {
+      payload: Joi.object({
+        channel: Joi.string().required(),
+        title: Joi.string().required(),
+        date: Joi.date().required(),
+        token_origin: Joi.string().optional()
+      })
+    },
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+          episode: Joi.object({
+          id: Joi.number().required(),
+          show_id: Joi.number().required(),
+          title: Joi.string().required(),
+          date: Joi.date().required(),
+          hls_live_url: Joi.string().required(),
+          token_origin: Joi.string().optional()
+        })
+      }).label('Episode')
+    }
+  }
+})
+
+
 
 server.route({
   method: 'GET',

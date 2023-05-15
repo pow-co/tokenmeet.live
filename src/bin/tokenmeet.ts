@@ -12,6 +12,8 @@ import * as tokenmeet from '../'
 
 import { liveapi } from '../'
 
+import { createEpisode } from '../episodes'
+
 program
   .command('add_youtube_video <title> <youtube_url>')
   .action(async (title, youtube_url) => {
@@ -144,26 +146,18 @@ program
   })
 
 program
-  .command('create-episode <show-stub> <title>')
-  .action(async (stub, title) => {
+  .command('create-episode <channel> <title> <date>')
+  .action(async (channel, title, date) => {
 
     try {
 
-      const [show, isNew] = await models.Show.findOrCreate({
-        where: { stub },
-        defaults: { stub }
-      })
+      let episode = await createEpisode({ channel, title, date })
 
-      const episode = await models.ShowEpisode.create({
-        show_id: show.id,
-        title
-      })
-
-      console.log(episode.toJSON())
+      console.log(episode)
 
     } catch(error) {
 
-      console.error(error.message)
+      console.error('error', error)
 
     }
 
@@ -183,10 +177,9 @@ program
         }
       })
 
-      const update = {}
-      update[key] = value
+      episode[key] = value
 
-      await episode.updateAttributes(update)
+      await episode.save()
 
       console.log(episode.toJSON())
 

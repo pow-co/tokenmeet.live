@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     startedAt: DataTypes.DATE,
     endedAt: DataTypes.DATE,
     jitsi_session_id: DataTypes.STRING,
-    jitsi_meet_8x8_url: DataTypes.TEXT
+    jitsi_meet_8x8_url: DataTypes.TEXT,
+    channel: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Video',

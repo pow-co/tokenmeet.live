@@ -9,9 +9,9 @@ export async function show(req) {
 
     const { channel } = req.params
 
-    const liveapi_data = await findOrCreateLivestream({ channel })
+    const livestream = await findOrCreateLivestream({ channel })
 
-    return liveapi_data
+    return { livestream }
 
   } catch(error) {
 

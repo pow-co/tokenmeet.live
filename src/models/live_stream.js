@@ -15,6 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   LiveStream.init({
     channel: DataTypes.STRING,
+    meet_token: DataTypes.STRING,
+    live_token: DataTypes.STRING,
     liveapi_data: DataTypes.JSON
   }, {
     sequelize,

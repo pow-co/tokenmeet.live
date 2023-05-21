@@ -108,7 +108,7 @@ export async function findOrCreateLivestream({channel}: { channel: string }) {
 
   if (record) {
 
-    return record.liveapi_data
+    return record
 
   }
 

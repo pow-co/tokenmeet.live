@@ -39,6 +39,8 @@ export async function createLiveapiVideoFromURL({ input_url }: { input_url: stri
 
 }
 
+type LiveapiVideo = any
+
 export async function uploadLiveAPIVideo({ filepath }: { filepath: string }) {
 
   console.log('liveapi.video.create', { filepath })
@@ -195,10 +197,6 @@ export async function convertTemporaryRecording({ livestream_id, id, from, durat
 
 }
 
-export interface LiveapiVideo {
-
-}
-
 export async function getVideo({ video_id }: { video_id }): Promise<LiveapiVideo> {
 
   let record = await models.LiveapiVideo.findOne({ where: { _id: video_id }})
@@ -217,6 +215,13 @@ export async function getVideo({ video_id }: { video_id }): Promise<LiveapiVideo
   }
   
   return record
+
+}
+export async function listVideosByChannel({ channel }: {channel: string}): Promise<LiveapiVideo[]> {
+
+  return models.LiveapiVideo.findAll({
+    where: { channel }
+  })
 
 }
 

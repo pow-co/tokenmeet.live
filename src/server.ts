@@ -215,6 +215,24 @@ const Video = Joi.object({
 
 server.route({
   method: 'GET',
+  path: '/api/v1/liveapi/videos/{video_id}',
+  handler: handlers.LiveapiVideos.show,
+  options: {
+    description: 'Returns A Single Liveapi Video',
+    tags: ['api', 'liveapi'],
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        video: Joi.object({})
+      }).label('Videos')
+    }
+  }
+})
+
+
+
+server.route({
+  method: 'GET',
   path: '/api/v1/videos',
   handler: handlers.Videos.index,
   options: {
@@ -254,6 +272,18 @@ server.route({
     tags: ['api', 'shows']
   }
 })
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/liveapi/channels/{channel}/videos',
+  handler: handlers.LiveapiVideos.index,
+  options: {
+    description: 'List all Liveapi Videos for a Channel',
+    tags: ['api', 'liveapi']
+  }
+})
+
+
 
 server.route({
   method: 'GET',

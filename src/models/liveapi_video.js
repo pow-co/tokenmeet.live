@@ -22,6 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     organization: DataTypes.STRING,
     media_info: DataTypes.JSON,
     creation_time: DataTypes.STRING,
+    channel: DataTypes.STRING,
     active: {
       type: DataTypes.STRING,
       defaultValue: true

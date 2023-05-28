@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Show.init({
     name: DataTypes.STRING,
-    stub: DataTypes.STRING
+    channel: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Show',

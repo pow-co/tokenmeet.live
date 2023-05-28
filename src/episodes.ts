@@ -11,8 +11,8 @@ export async function createEpisode({ channel, title, date, token_origin }: {
 }) {
 
   const show = await models.Show.findOne({
-    where: { stub: channel },
-    defaults: { stub: channel }
+    where: { channel },
+    defaults: { channel }
   })
 
   if (!show) {

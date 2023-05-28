@@ -123,14 +123,14 @@ program
   })
 
 program
-  .command('create-show <name> <stub>')
-  .action(async (name, stub) => {
+  .command('create-show <name> <channel>')
+  .action(async (name, channel) => {
 
     try {
 
       const [record, isNew] = await models.Show.findOrCreate({
-        where: { stub },
-        defaults: { name, stub }
+        where: { channel },
+        defaults: { name, channel }
       })
 
       console.log(record.toJSON(), {isNew})

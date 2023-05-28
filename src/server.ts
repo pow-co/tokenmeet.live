@@ -265,13 +265,32 @@ server.route({
 
 server.route({
   method: 'GET',
-  path: '/api/v1/shows/{stub}',
+  path: '/api/v1/shows/{channel}',
   handler: handlers.Shows.show,
   options: {
     description: 'Returns Show and its Episodes',
     tags: ['api', 'shows']
   }
 })
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/channels/{channel}',
+  handler: handlers.Channels.show,
+  options: {
+    description: 'List all  data for a Channel',
+    tags: ['api', 'channels'],
+    response: {
+	    failAction: 'log',
+	    schema: Joi.object({
+		    videos: Joi.array().required(),
+		    liveapiVideos: Joi.array().required()
+	    })
+    }
+  }
+})
+
+
 
 server.route({
   method: 'GET',

@@ -14,14 +14,14 @@ export class Show {
 
 interface CreateShow {
   name: string;
-  stub: string;
+  channel: string;
 }
 
 export async function create(params: CreateShow): Promise<Show> {
 
   const [record] = await models.Show.findOrCreate({
     where: {
-      stub: params.stub
+      channel: params.channel
     },
     defaults: params
   })
@@ -29,11 +29,11 @@ export async function create(params: CreateShow): Promise<Show> {
   return new Show({ record })
 }
 
-export async function findOne({ stub }: {stub: string}): Promise<Show | null> {
+export async function findOne({ channel }: {channel: string}): Promise<Show | null> {
 
   const record = await models.Show.findOne({
     where: {
-      stub
+      channel
     }
   })
 

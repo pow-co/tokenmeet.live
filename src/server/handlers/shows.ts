@@ -13,11 +13,9 @@ export async function index(req, h) {
 
 export async function show(req, h) {
 
-  console.log("STUB", req.params.stub)
-
   const show = await models.Show.findOne({
     where: {
-      stub: req.params.stub
+      channel: req.params.channel
     },
     includes: [{
       model: models.ShowEpisode,

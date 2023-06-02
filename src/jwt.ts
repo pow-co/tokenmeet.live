@@ -2,7 +2,7 @@
 var jsonwebtoken = require('jsonwebtoken');
 require('dotenv').config()
 
-import * as moment from 'moment'
+import moment from 'moment'
 
 /**
  * Function generates a JaaS JWT.

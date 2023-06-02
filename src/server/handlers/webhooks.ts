@@ -53,7 +53,7 @@ export async function createLiveapi(req) {
 
     try {
 
-      await models.Event.create({
+      models.Event.create({
 
         namespace: 'liveapi',
 
@@ -63,9 +63,23 @@ export async function createLiveapi(req) {
 
       });
 
+      const { event, payload } = req.payload
+
+      models.Event.create({
+
+        namespace: 'liveapi',
+
+        type: event,
+
+        payload
+
+      });
+
       const channel = await getChannel()
 
       channel.publish('powco', 'liveapi.webhook', Buffer.from(JSON.stringify(req.payload)))
+
+      channel.publish('powco', `liveapi.${event}`, Buffer.from(JSON.stringify(payload)))
 
     } catch(error) {
 

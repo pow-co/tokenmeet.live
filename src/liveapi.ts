@@ -138,6 +138,20 @@ export interface TemporaryRecording {
   download_url: string;
 
 }
+export async function getTemporaryRecording({livestream_id, _id}: { livestream_id: string, _id: string }): Promise<TemporaryRecording> {
+
+  const { data } = await axios.get(`https://api.liveapi.com/live_streams/${livestream_id}/temporary_recordings/${_id}`, {
+    auth: {
+      username: process.env.liveapi_access_token_id_production,
+      password: process.env.liveapi_secret_key_production
+    }
+  })
+
+  return data
+
+}
+
+
 
 export async function getTemporaryRecordings({livestream_id}: { livestream_id: string }): Promise<TemporaryRecording[]> {
 
@@ -148,13 +162,22 @@ export async function getTemporaryRecordings({livestream_id}: { livestream_id: s
     }
   })
 
+  const livestream = await models.LiveStream.findOne({ where: { liveapi_data: { _id: livestream_id }}})
+
+  if (!livestream) { throw new Error('livestream not found') }
+
+  const { channel } = livestream
+
   await Promise.all(data.map(async temporaryRecording => {
 
     const [record, isNew] = await models.LiveapiTemporaryRecording.findOrCreate({
       where: {
         _id: temporaryRecording._id
       },
-      defaults: temporaryRecording
+      defaults: Object.assign(temporaryRecording, {
+        channel,
+        livestream_id
+      })
     })
 
     if (isNew) {
@@ -181,19 +204,72 @@ interface ConvertTemporaryRecordingResponse {
     download_url: string | null;
 }
 
-export async function convertTemporaryRecording({ livestream_id, id, from, duration }: {livestream_id: string, id: string, from: string, duration: integer}): Promise<ConvertTemporaryRecordingResponse> {
+export async function createVideoFromTemporaryRecording({ _id }: {_id: string }): Promise<LiveapiVideo> {
 
-  const { data } = await axios.post(`https://api.liveapi.com/live_streams/${livestream_id}/temporary_recordings/${id}`, {
-    from,
-    duration
+  const record = await models.LiveapiTemporaryRecording.findOne({ where: { _id }})
+
+  if (!record) { throw new Error('temporary recording not found') }
+
+  if (record.video_id) {
+
+    return getVideo({ video_id: record.video_id })
+
+  }
+
+  if (!record.download_url) { throw new Error('temporary recording record is missing download_url') }
+
+  const { data } = await axios.post(`https://api.liveapi.com/videos`, {
+    input_url: record.download_url
   }, {
     auth: {
       username: process.env.liveapi_access_token_id_production,
       password: process.env.liveapi_secret_key_production
     }
   })
+
+  const video_id = data._id
+
+  record.video_id = video_id
+
+  record.convert_requested_at = new Date()
+
+  await record.save()
+
+  const video = await getVideo({ video_id })
+
+  video.channel = record.channel
+
+  video.livestream_id = record.livestream_id
+
+  await video.save()
+
+  return video
+
+}
+
+export async function convertTemporaryRecording({ _id }: {_id: string }): Promise<ConvertTemporaryRecordingResponse> {
+
+  const record = await models.LiveapiTemporaryRecording.findOne({ where: { _id }})
+
+  if (!record) { throw new Error('temporary recording not found') }
+
+  const { data } = await axios.post(`https://api.liveapi.com/live_streams/${record.livestream_id}/temporary_recordings/${_id}`, {
+    from: record.start_time,
+    duration: record.duration
+  }, {
+    auth: {
+      username: process.env.liveapi_access_token_id_production,
+      password: process.env.liveapi_secret_key_production
+    }
+  })
+
+  console.log('liveapi.convertTemporaryRecording.result', data)
+
+  record.conversion_requested_at = new Date()
+
+  await record.save()
   
-  return data
+  return record
 
 }
 

@@ -229,6 +229,52 @@ server.route({
   }
 })
 
+server.route({
+  method: 'GET',
+  path: '/api/v1/liveapi/livestreams/{livestream_id}/temporary-recordings',
+  handler: handlers.LiveapiTemporaryRecordings.index,
+  options: {
+    description: 'List Temporary Recordings available for a given Liveapi Livestream',
+    tags: ['api', 'liveapi'],
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        temporary_recordings: Joi.array().items(Joi.object())
+      }).label('LiveapiTemporaryRecordings')
+    }
+  }
+})
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/liveapi/livestreams/{livestream_id}/temporary-recordings/{_id}',
+  handler: handlers.LiveapiTemporaryRecordings.show,
+  options: {
+    description: 'Get a Single Temporary Recording of a given Liveapi Livestream',
+    tags: ['api', 'liveapi'],
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        temporary_recording: Joi.object()
+      }).label('LiveapiTemporaryRecording')
+    }
+  }
+})
+
+server.route({
+  method: 'POST',
+  path: '/api/v1/liveapi/livestreams/{livestream_id}/temporary-recordings/{_id}',
+  handler: handlers.LiveapiTemporaryRecordings.convert,
+  options: {
+    description: 'Convert a temporary recording to video on demand',
+    tags: ['api', 'liveapi'],
+    response: {
+      failAction: 'log'
+    }
+  }
+})
+
+
 
 
 server.route({

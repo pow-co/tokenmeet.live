@@ -20,6 +20,34 @@ import { getChannel } from 'rabbi'
 
 import { log } from './log'
 
+type Livestream = any
+
+export async function getLivestream({ id }: {id: string}): Promise<Livestream> {
+
+  const { data } = await axios.get(`https://api.liveapi.com/live_streams/${id}`, {
+    auth: {
+      username: process.env.liveapi_access_token_id_production,
+      password: process.env.liveapi_secret_key_production
+    }
+  })
+
+  return data
+
+
+}
+export async function listLivestreams(): Promise<Livestream[]> {
+
+  const { data } = await axios.get('https://api.liveapi.com/live_streams', {
+    auth: {
+      username: process.env.liveapi_access_token_id_production,
+      password: process.env.liveapi_secret_key_production
+    }
+  })
+
+  return data
+
+}
+
 export async function createLiveapiVideoFromURL({ input_url }: { input_url: string }) {
 
   console.log('liveapi.video.create', { input_url })
@@ -168,7 +196,7 @@ export async function getTemporaryRecordings({livestream_id}: { livestream_id: s
 
   const { channel } = livestream
 
-  await Promise.all(data.map(async temporaryRecording => {
+  return Promise.all(data.map(async temporaryRecording => {
 
     const [record, isNew] = await models.LiveapiTemporaryRecording.findOrCreate({
       where: {
@@ -190,9 +218,9 @@ export async function getTemporaryRecordings({livestream_id}: { livestream_id: s
 
     }
 
-  }))
+    return record
 
-  return data
+  }))
 
 }
 

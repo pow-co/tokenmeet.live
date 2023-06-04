@@ -231,6 +231,36 @@ server.route({
 
 server.route({
   method: 'GET',
+  path: '/api/v1/liveapi/livestreams/{id}',
+  handler: handlers.LiveapiLivestreams.show,
+  options: {
+    description: 'Show Liveapi Livestream',
+    tags: ['api', 'liveapi'],
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        livestream: Joi.object().required()
+      }).label('LiveapiLivestream') }
+  }
+})
+
+server.route({
+  method: 'GET',
+  path: '/api/v1/liveapi/livestreams',
+  handler: handlers.LiveapiLivestreams.index,
+  options: {
+    description: 'List Liveapi Livestreams',
+    tags: ['api', 'liveapi'],
+    response: {
+      failAction: 'log',
+      schema: Joi.object({
+        livestreams: Joi.array().required()
+      }).label('LiveapiLivestreams') }
+  }
+})
+
+server.route({
+  method: 'GET',
   path: '/api/v1/liveapi/livestreams/{livestream_id}/temporary-recordings',
   handler: handlers.LiveapiTemporaryRecordings.index,
   options: {
@@ -273,8 +303,6 @@ server.route({
     }
   }
 })
-
-
 
 
 server.route({

@@ -23,8 +23,6 @@ export async function start() {
 
   }
 
-  schedule('* * * * *', syncLiveapiVideos) // every minute
-
 }
 
 if (require.main === module) {

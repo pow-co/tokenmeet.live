@@ -44,7 +44,7 @@ export default async function start(channel, msg, json: WebhookData) {
     const baseUrl = 'https://api.assemblyai.com/v2'
 
     const headers = {
-        authorization: process.env.ASSEMBLYAI_API_KEY 
+        authorization: String(process.env.ASSEMBLYAI_API_KEY)
     }
 
     const url = `${baseUrl}/transcript`
